@@ -3,7 +3,7 @@
 # Project files
 .idea
 .vs
-.vscode
+#.vscode
 cmake-build-debug
 
 # User-specific files
