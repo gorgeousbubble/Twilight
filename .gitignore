@@ -18,6 +18,7 @@ cmake-build-debug
 *.filters
 
 # Build results
+[Bb]uild/
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
