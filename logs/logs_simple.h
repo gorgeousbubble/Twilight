@@ -15,7 +15,12 @@
 #define TWILIGHT_LOGS_SIMPLE_H
 
 #include <Windows.h>
+#include <Shlwapi.h>
+
 #include <iostream>
+#include <fstream>
+
+#pragma comment(lib, "Shlwapi.lib")
 
 #ifdef TWILIGHT_EXPORTS
 #define TWILIGHT_LOGS_SIMPLE_API __declspec(dllexport)
@@ -28,7 +33,8 @@
 class TWILIGHT_LOGS_SIMPLE_API logs_simple {
 private:
     static void get_path(char* str, int size);
-    static void write(char* str, ...);
+    static void create();
+    static void write(LPCSTR level, LPCSTR str, ...);
 
 };
 
