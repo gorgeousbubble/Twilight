@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 14)
 
 add_definitions(-DDEBUG)
 add_definitions(-DUNICODE)
+add_definitions(-DTWILIGHT_EXPORTS)
 
 include_directories("thirdpart/dx/inc")
 

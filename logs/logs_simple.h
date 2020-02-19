@@ -14,9 +14,8 @@
 #ifndef TWILIGHT_LOGS_SIMPLE_H
 #define TWILIGHT_LOGS_SIMPLE_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <limits.h>
+#include <Windows.h>
+#include <iostream>
 
 #ifdef TWILIGHT_EXPORTS
 #define TWILIGHT_LOGS_SIMPLE_API __declspec(dllexport)
@@ -26,8 +25,10 @@
 
 #define TWILIGHT_LOGS_SIMPLE_CALLMETHOD __stdcall
 
-class logs_simple {
+class TWILIGHT_LOGS_SIMPLE_API logs_simple {
 private:
+    static void get_path(char* str, int size);
+    static void write(char* str, ...);
 
 };
 
