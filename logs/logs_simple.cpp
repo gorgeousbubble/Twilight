@@ -77,7 +77,7 @@ void logs_simple::create() {
     fout.close();
 }
 
-void logs_simple::write(LPCSTR level, LPCSTR str, ...) {
+void logs_simple::write(LPCSTR str, ...) {
     char chPath[MAX_PATH] = {0};
     char chLog[MAX_PATH] = {0};
     char chParas[MAX_PATH] = {0};
@@ -100,7 +100,7 @@ void logs_simple::write(LPCSTR level, LPCSTR str, ...) {
     fout.seekp(ios::end);
     // print prefix info
     memset(chLog, 0, sizeof(chLog));
-    _snprintf_s(chLog, sizeof(chLog), "%d/%02d/%02d %02d:%02d:%02d -%s- [%d](%d):", st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond, level, dwProcess, dwThread);
+    _snprintf_s(chLog, sizeof(chLog), "%d/%02d/%02d %02d:%02d:%02d [%d](%d):", st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond, dwProcess, dwThread);
     fout << chLog;
     // print parameters
     va_list arg_ptr;
@@ -109,5 +109,215 @@ void logs_simple::write(LPCSTR level, LPCSTR str, ...) {
     _vsnprintf(chParas, sizeof(chParas), str, arg_ptr);
     fout << chParas << endl;
     va_end(arg_ptr);
+    fout.close();
+}
+
+void logs_simple::debug(LPCSTR str, ...) {
+    char chPath[MAX_PATH] = {0};
+    char chLog[MAX_PATH] = {0};
+    char chParas[MAX_PATH] = {0};
+    // get system time now
+    SYSTEMTIME st;
+    ::GetLocalTime(&st);
+    // get process id
+    DWORD dwProcess;
+    dwProcess = ::GetCurrentProcessId();
+    // get thread id
+    DWORD dwThread;
+    dwThread = ::GetCurrentThreadId();
+    // get log file path
+    get_path(chPath, sizeof(chPath));
+    if (!::PathFileExistsA(chPath)) {
+        create();
+    }
+    // record to log file
+    ofstream fout(chPath, ios::app);
+    fout.seekp(ios::end);
+    // print prefix info
+    memset(chLog, 0, sizeof(chLog));
+    _snprintf_s(chLog, sizeof(chLog), "%d/%02d/%02d %02d:%02d:%02d -DEBUG- [%d](%d):", st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond, dwProcess, dwThread);
+    fout << chLog;
+    // print parameters
+    va_list arg_ptr;
+            va_start(arg_ptr, str);
+    memset(chParas, 0, sizeof(chParas));
+    _vsnprintf(chParas, sizeof(chParas), str, arg_ptr);
+    fout << chParas << endl;
+            va_end(arg_ptr);
+    fout.close();
+}
+
+void logs_simple::info(LPCSTR str, ...) {
+    char chPath[MAX_PATH] = {0};
+    char chLog[MAX_PATH] = {0};
+    char chParas[MAX_PATH] = {0};
+    // get system time now
+    SYSTEMTIME st;
+    ::GetLocalTime(&st);
+    // get process id
+    DWORD dwProcess;
+    dwProcess = ::GetCurrentProcessId();
+    // get thread id
+    DWORD dwThread;
+    dwThread = ::GetCurrentThreadId();
+    // get log file path
+    get_path(chPath, sizeof(chPath));
+    if (!::PathFileExistsA(chPath)) {
+        create();
+    }
+    // record to log file
+    ofstream fout(chPath, ios::app);
+    fout.seekp(ios::end);
+    // print prefix info
+    memset(chLog, 0, sizeof(chLog));
+    _snprintf_s(chLog, sizeof(chLog), "%d/%02d/%02d %02d:%02d:%02d -INFO- [%d](%d):", st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond, dwProcess, dwThread);
+    fout << chLog;
+    // print parameters
+    va_list arg_ptr;
+            va_start(arg_ptr, str);
+    memset(chParas, 0, sizeof(chParas));
+    _vsnprintf(chParas, sizeof(chParas), str, arg_ptr);
+    fout << chParas << endl;
+            va_end(arg_ptr);
+    fout.close();
+}
+
+void logs_simple::event(LPCSTR str, ...) {
+    char chPath[MAX_PATH] = {0};
+    char chLog[MAX_PATH] = {0};
+    char chParas[MAX_PATH] = {0};
+    // get system time now
+    SYSTEMTIME st;
+    ::GetLocalTime(&st);
+    // get process id
+    DWORD dwProcess;
+    dwProcess = ::GetCurrentProcessId();
+    // get thread id
+    DWORD dwThread;
+    dwThread = ::GetCurrentThreadId();
+    // get log file path
+    get_path(chPath, sizeof(chPath));
+    if (!::PathFileExistsA(chPath)) {
+        create();
+    }
+    // record to log file
+    ofstream fout(chPath, ios::app);
+    fout.seekp(ios::end);
+    // print prefix info
+    memset(chLog, 0, sizeof(chLog));
+    _snprintf_s(chLog, sizeof(chLog), "%d/%02d/%02d %02d:%02d:%02d -EVENT- [%d](%d):", st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond, dwProcess, dwThread);
+    fout << chLog;
+    // print parameters
+    va_list arg_ptr;
+            va_start(arg_ptr, str);
+    memset(chParas, 0, sizeof(chParas));
+    _vsnprintf(chParas, sizeof(chParas), str, arg_ptr);
+    fout << chParas << endl;
+            va_end(arg_ptr);
+    fout.close();
+}
+
+void logs_simple::warning(LPCSTR str, ...) {
+    char chPath[MAX_PATH] = {0};
+    char chLog[MAX_PATH] = {0};
+    char chParas[MAX_PATH] = {0};
+    // get system time now
+    SYSTEMTIME st;
+    ::GetLocalTime(&st);
+    // get process id
+    DWORD dwProcess;
+    dwProcess = ::GetCurrentProcessId();
+    // get thread id
+    DWORD dwThread;
+    dwThread = ::GetCurrentThreadId();
+    // get log file path
+    get_path(chPath, sizeof(chPath));
+    if (!::PathFileExistsA(chPath)) {
+        create();
+    }
+    // record to log file
+    ofstream fout(chPath, ios::app);
+    fout.seekp(ios::end);
+    // print prefix info
+    memset(chLog, 0, sizeof(chLog));
+    _snprintf_s(chLog, sizeof(chLog), "%d/%02d/%02d %02d:%02d:%02d -WARNING- [%d](%d):", st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond, dwProcess, dwThread);
+    fout << chLog;
+    // print parameters
+    va_list arg_ptr;
+            va_start(arg_ptr, str);
+    memset(chParas, 0, sizeof(chParas));
+    _vsnprintf(chParas, sizeof(chParas), str, arg_ptr);
+    fout << chParas << endl;
+            va_end(arg_ptr);
+    fout.close();
+}
+
+void logs_simple::error(LPCSTR str, ...) {
+    char chPath[MAX_PATH] = {0};
+    char chLog[MAX_PATH] = {0};
+    char chParas[MAX_PATH] = {0};
+    // get system time now
+    SYSTEMTIME st;
+    ::GetLocalTime(&st);
+    // get process id
+    DWORD dwProcess;
+    dwProcess = ::GetCurrentProcessId();
+    // get thread id
+    DWORD dwThread;
+    dwThread = ::GetCurrentThreadId();
+    // get log file path
+    get_path(chPath, sizeof(chPath));
+    if (!::PathFileExistsA(chPath)) {
+        create();
+    }
+    // record to log file
+    ofstream fout(chPath, ios::app);
+    fout.seekp(ios::end);
+    // print prefix info
+    memset(chLog, 0, sizeof(chLog));
+    _snprintf_s(chLog, sizeof(chLog), "%d/%02d/%02d %02d:%02d:%02d -ERROR- [%d](%d):", st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond, dwProcess, dwThread);
+    fout << chLog;
+    // print parameters
+    va_list arg_ptr;
+            va_start(arg_ptr, str);
+    memset(chParas, 0, sizeof(chParas));
+    _vsnprintf(chParas, sizeof(chParas), str, arg_ptr);
+    fout << chParas << endl;
+            va_end(arg_ptr);
+    fout.close();
+}
+
+void logs_simple::critical(LPCSTR str, ...) {
+    char chPath[MAX_PATH] = {0};
+    char chLog[MAX_PATH] = {0};
+    char chParas[MAX_PATH] = {0};
+    // get system time now
+    SYSTEMTIME st;
+    ::GetLocalTime(&st);
+    // get process id
+    DWORD dwProcess;
+    dwProcess = ::GetCurrentProcessId();
+    // get thread id
+    DWORD dwThread;
+    dwThread = ::GetCurrentThreadId();
+    // get log file path
+    get_path(chPath, sizeof(chPath));
+    if (!::PathFileExistsA(chPath)) {
+        create();
+    }
+    // record to log file
+    ofstream fout(chPath, ios::app);
+    fout.seekp(ios::end);
+    // print prefix info
+    memset(chLog, 0, sizeof(chLog));
+    _snprintf_s(chLog, sizeof(chLog), "%d/%02d/%02d %02d:%02d:%02d -CRITICAL- [%d](%d):", st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond, dwProcess, dwThread);
+    fout << chLog;
+    // print parameters
+    va_list arg_ptr;
+            va_start(arg_ptr, str);
+    memset(chParas, 0, sizeof(chParas));
+    _vsnprintf(chParas, sizeof(chParas), str, arg_ptr);
+    fout << chParas << endl;
+            va_end(arg_ptr);
     fout.close();
 }
