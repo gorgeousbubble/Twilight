@@ -15,6 +15,14 @@
 
 using namespace std;
 
+//----------------------------------------------
+// @Function: get_path
+// @Purpose: get log file path
+// @Since: v1.00a
+// @Para: char *str path array address
+// @Para: int size path array size
+// @Return: None
+//----------------------------------------------
 void logs_simple::get_path(char *str, int size) {
     char chPath[MAX_PATH] = {0};
     char chName[MAX_PATH] = {0};
@@ -43,6 +51,13 @@ void logs_simple::get_path(char *str, int size) {
     memcpy_s(str, size, chPath, strlen(chPath));
 }
 
+//----------------------------------------------
+// @Function: create
+// @Purpose: create log file
+// @Since: v1.00a
+// @Para: None
+// @Return: None
+//----------------------------------------------
 void logs_simple::create() {
     char chPath[MAX_PATH] = {0};
     char chName[MAX_PATH] = {0};
@@ -77,6 +92,13 @@ void logs_simple::create() {
     fout.close();
 }
 
+//----------------------------------------------
+// @Function: write
+// @Purpose: write one log record
+// @Since: v1.00a
+// @Para: LPCSTR str format string print
+// @Return: None
+//----------------------------------------------
 void logs_simple::write(LPCSTR str, ...) {
     char chPath[MAX_PATH] = {0};
     char chLog[MAX_PATH] = {0};
@@ -112,6 +134,13 @@ void logs_simple::write(LPCSTR str, ...) {
     fout.close();
 }
 
+//----------------------------------------------
+// @Function: debug
+// @Purpose: write one log record (debug)
+// @Since: v1.00a
+// @Para: LPCSTR str format string print
+// @Return: None
+//----------------------------------------------
 void logs_simple::debug(LPCSTR str, ...) {
     char chPath[MAX_PATH] = {0};
     char chLog[MAX_PATH] = {0};
@@ -147,6 +176,13 @@ void logs_simple::debug(LPCSTR str, ...) {
     fout.close();
 }
 
+//----------------------------------------------
+// @Function: info
+// @Purpose: write one log record (info)
+// @Since: v1.00a
+// @Para: LPCSTR str format string print
+// @Return: None
+//----------------------------------------------
 void logs_simple::info(LPCSTR str, ...) {
     char chPath[MAX_PATH] = {0};
     char chLog[MAX_PATH] = {0};
@@ -182,6 +218,13 @@ void logs_simple::info(LPCSTR str, ...) {
     fout.close();
 }
 
+//----------------------------------------------
+// @Function: event
+// @Purpose: write one log record (event)
+// @Since: v1.00a
+// @Para: LPCSTR str format string print
+// @Return: None
+//----------------------------------------------
 void logs_simple::event(LPCSTR str, ...) {
     char chPath[MAX_PATH] = {0};
     char chLog[MAX_PATH] = {0};
@@ -217,6 +260,13 @@ void logs_simple::event(LPCSTR str, ...) {
     fout.close();
 }
 
+//----------------------------------------------
+// @Function: warning
+// @Purpose: write one log record (warning)
+// @Since: v1.00a
+// @Para: LPCSTR str format string print
+// @Return: None
+//----------------------------------------------
 void logs_simple::warning(LPCSTR str, ...) {
     char chPath[MAX_PATH] = {0};
     char chLog[MAX_PATH] = {0};
@@ -252,6 +302,13 @@ void logs_simple::warning(LPCSTR str, ...) {
     fout.close();
 }
 
+//----------------------------------------------
+// @Function: error
+// @Purpose: write one log record (error)
+// @Since: v1.00a
+// @Para: LPCSTR str format string print
+// @Return: None
+//----------------------------------------------
 void logs_simple::error(LPCSTR str, ...) {
     char chPath[MAX_PATH] = {0};
     char chLog[MAX_PATH] = {0};
@@ -287,6 +344,13 @@ void logs_simple::error(LPCSTR str, ...) {
     fout.close();
 }
 
+//----------------------------------------------
+// @Function: critical
+// @Purpose: write one log record (critical)
+// @Since: v1.00a
+// @Para: LPCSTR str format string print
+// @Return: None
+//----------------------------------------------
 void logs_simple::critical(LPCSTR str, ...) {
     char chPath[MAX_PATH] = {0};
     char chLog[MAX_PATH] = {0};
