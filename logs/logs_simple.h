@@ -34,7 +34,10 @@ class TWILIGHT_LOGS_SIMPLE_API logs_simple {
 private:
     static void get_path(char* str, int size);
     static void create();
+
+protected:
     static void write(LPCSTR str, ...);
+
 public:
     static void debug(LPCSTR str, ...);
     static void info(LPCSTR str, ...);
