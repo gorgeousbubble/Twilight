@@ -15,7 +15,7 @@
 #define TWILIGHT_LOGS_GLOG_H
 
 #include <iostream>
-#include "logging.h"
+#include "glog/logging.h"
 
 #pragma comment(lib, "glog.lib")
 
