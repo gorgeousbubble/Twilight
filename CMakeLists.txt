@@ -8,9 +8,7 @@ add_definitions(-DUNICODE)
 add_definitions(-DTWILIGHT_EXPORTS)
 
 include_directories("thirdpart/dx/inc")
-include_directories("thirdpart/glog/inc")
 
 link_directories("thirdpart/dx/lib/x86")
-link_directories("thirdpart/glog/lib")
 
-add_executable(twilight main.cpp logs/logs_simple.cpp logs/logs_simple.h logs/logs_glog.cpp logs/logs_glog.h)
+add_executable(twilight main.cpp logs/logs_simple.cpp logs/logs_simple.h)
