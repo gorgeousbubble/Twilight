@@ -13,6 +13,7 @@
 
 #include "logs_simple.h"
 
+#pragma warning(disable : 4996)
 using namespace std;
 
 //----------------------------------------------
