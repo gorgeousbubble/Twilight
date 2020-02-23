@@ -12,3 +12,18 @@
 */
 
 #include "utils_thread_lock.h"
+
+utils_thread_lock::utils_thread_lock(const CRITICAL_SECTION *lock, const bool safe) {
+    m_pLock = const_cast<CRITICAL_SECTION*>(lock);
+    m_bSafe = safe;
+
+    if (m_bSafe) {
+        ::EnterCriticalSection(m_pLock);
+    }
+}
+
+utils_thread_lock::~utils_thread_lock() {
+    if (m_bSafe) {
+        ::LeaveCriticalSection(m_pLock);
+    }
+}

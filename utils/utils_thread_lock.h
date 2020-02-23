@@ -25,7 +25,13 @@
 #define TWILIGHT_UTILS_THREAD_LOCK_CALLMETHOD __stdcall
 
 class utils_thread_lock {
+private:
+    CRITICAL_SECTION* m_pLock;
+    bool m_bSafe;
 
+public:
+    explicit utils_thread_lock(const CRITICAL_SECTION* lock, const bool safe= true);
+    ~utils_thread_lock();
 };
 
 
