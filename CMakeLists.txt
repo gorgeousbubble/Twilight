@@ -10,4 +10,4 @@ include_directories("thirdpart/dx/inc")
 
 link_directories("thirdpart/dx/lib/x86")
 
-add_executable(twilight main.cpp logs/logs_simple.cpp logs/logs_simple.h)
+add_executable(twilight main.cpp logs/logs_simple.cpp logs/logs_simple.h utils/utils_threadsafe.cpp utils/utils_threadsafe.h)
