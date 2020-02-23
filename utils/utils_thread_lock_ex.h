@@ -25,7 +25,16 @@
 #define TWILIGHT_UTILS_THREAD_LOCK_EX_CALLMETHOD __stdcall
 
 class utils_thread_lock_ex {
+private:
+    CRITICAL_SECTION m_csLock;
 
+public:
+    utils_thread_lock_ex();
+    ~utils_thread_lock_ex();
+
+    CRITICAL_SECTION* get();
+    void enter();
+    void leave();
 };
 
 
