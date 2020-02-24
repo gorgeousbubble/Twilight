@@ -13,6 +13,14 @@
 
 #include "utils_thread_lock.h"
 
+//----------------------------------------------
+// @Function: utils_thread_lock
+// @Purpose: construct function
+// @Since: v1.00a
+// @Para: const CRITICAL_SECTION *lock input critical section address defined in external
+// @Para: const bool safe the flag of start with safe mode or not
+// @Return: None
+//----------------------------------------------
 utils_thread_lock::utils_thread_lock(const CRITICAL_SECTION *lock, const bool safe) {
     m_pLock = const_cast<CRITICAL_SECTION*>(lock);
     m_bSafe = safe;
@@ -22,6 +30,13 @@ utils_thread_lock::utils_thread_lock(const CRITICAL_SECTION *lock, const bool sa
     }
 }
 
+//----------------------------------------------
+// @Function: ~utils_thread_lock
+// @Purpose: destruct function
+// @Since: v1.00a
+// @Para: None
+// @Return: None
+//----------------------------------------------
 utils_thread_lock::~utils_thread_lock() {
     if (m_bSafe) {
         ::LeaveCriticalSection(m_pLock);
