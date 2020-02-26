@@ -24,7 +24,7 @@
 
 #define TWILIGHT_UTILS_THREAD_LOCK_CALLMETHOD __stdcall
 
-class utils_thread_lock {
+class TWILIGHT_UTILS_THREAD_LOCK_API utils_thread_lock {
 private:
     CRITICAL_SECTION* m_pLock;
     bool m_bSafe;
