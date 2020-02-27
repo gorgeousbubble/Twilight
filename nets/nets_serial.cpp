@@ -12,6 +12,7 @@
 */
 
 #include "nets_serial.h"
+#include "../utils/utils_thread_lock.h"
 
 //----------------------------------------------
 // @Function: nets_serial
@@ -75,4 +76,16 @@ nets_serial::~nets_serial() {
     }
     // delete critical section
     ::DeleteCriticalSection(&m_csComSync);
+}
+
+//----------------------------------------------
+// @Function: get_status
+// @Purpose: get serial port open status
+// @Since: v1.00a
+// @Para: None
+// @Return: bool (true:open/false:close)
+//----------------------------------------------
+bool nets_serial::get_status() const {
+    utils_thread_lock lock(&m_csComSync);
+    return m_bOpen;
 }

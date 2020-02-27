@@ -56,6 +56,8 @@ public:
     nets_serial();
     ~nets_serial();
 
+    bool TWILIGHT_NETS_SERIAL_CALLMETHOD get_status() const;
+
 };
 
 
