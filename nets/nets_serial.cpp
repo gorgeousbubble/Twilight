@@ -89,3 +89,27 @@ bool nets_serial::get_status() const {
     utils_thread_lock lock(&m_csComSync);
     return m_bOpen;
 }
+
+//----------------------------------------------
+// @Function: get_recv
+// @Purpose: get serial port receive flag
+// @Since: v1.00a
+// @Para: None
+// @Return: bool (true/false)
+//----------------------------------------------
+bool nets_serial::get_recv() const {
+    utils_thread_lock lock(&m_csComSync);
+    return m_bRecv;
+}
+
+//----------------------------------------------
+// @Function: set_recv
+// @Purpose: set serial port receive flag
+// @Since: v1.00a
+// @Para: bool recv receive flag
+// @Return: None
+//----------------------------------------------
+void nets_serial::set_recv(bool recv) {
+    utils_thread_lock lock(&m_csComSync);
+    m_bRecv = recv;
+}

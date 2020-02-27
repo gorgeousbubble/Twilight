@@ -57,6 +57,8 @@ public:
     ~nets_serial();
 
     bool TWILIGHT_NETS_SERIAL_CALLMETHOD get_status() const;
+    bool TWILIGHT_NETS_SERIAL_CALLMETHOD get_recv() const;
+    void TWILIGHT_NETS_SERIAL_CALLMETHOD set_recv(bool recv);
 
 };
 
