@@ -12,7 +12,10 @@
 */
 
 #include "nets_serial.h"
+#include "../utils/utils_safe.h"
 #include "../utils/utils_thread_lock.h"
+
+using namespace std;
 
 //----------------------------------------------
 // @Function: nets_serial
@@ -112,4 +115,120 @@ bool nets_serial::get_recv() const {
 void nets_serial::set_recv(bool recv) {
     utils_thread_lock lock(&m_csComSync);
     m_bRecv = recv;
+}
+
+//----------------------------------------------
+// @Function: enum_serial
+// @Purpose: enum serial ports
+// @Since: v1.00a
+// @Para: None
+// @Return: None
+//----------------------------------------------
+void nets_serial::enum_serial() {
+    HKEY hKey;
+    LSTATUS ls;
+    ls = RegOpenKeyExW(HKEY_LOCAL_MACHINE, _T("Hardware\\DeviceMap\\SerialComm"), NULL, KEY_READ, &hKey);
+    if (ls == ERROR_SUCCESS) {
+        TCHAR szPortName[256] = { 0 };
+        TCHAR szComName[256] = { 0 };
+        DWORD dwLong = 0;
+        DWORD dwSize = 0;
+        int nCount = 0;
+        // clear map...
+        m_mapCom.clear();
+        while (true) {
+            LSTATUS ls2;
+            // enum value register
+            dwLong = dwSize = 256;
+            ls2 = RegEnumValueW(hKey, nCount, szPortName, &dwLong, NULL, NULL, (PUCHAR)szComName, &dwSize);
+            if (ERROR_NO_MORE_ITEMS == ls2) {
+                break;
+            }
+            // string convention
+            int iLen = WideCharToMultiByte(CP_ACP, 0, szComName, -1, NULL, 0, NULL, NULL);
+            char* chRtn = new char[iLen + 1];
+            memset(chRtn, 0, iLen + 1);
+            WideCharToMultiByte(CP_ACP, 0, szComName, -1, chRtn, iLen, NULL, NULL);
+            // insert into map
+            string str(chRtn);
+            m_mapCom.insert(pair<int, string>(nCount, str));
+            safe_delete_array(chRtn);
+            nCount++;
+        }
+    }
+}
+
+//----------------------------------------------
+// @Function: create_serial
+// @Purpose: create serial port
+// @Since: v1.00a
+// @Para: const char* szPort serial port name
+// @Return: None
+//----------------------------------------------
+bool nets_serial::create_serial(const char* szPort) {
+    utils_thread_lock lock(&m_csComSync);
+    DWORD dwError;
+    // create serial port by name
+    m_hCom = ::CreateFileA(szPort, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OVERLAPPED, NULL);
+    if (INVALID_HANDLE_VALUE == m_hCom) {
+        dwError = GetLastError();
+        return false;
+    }
+    return true;
+}
+
+//----------------------------------------------
+// @Function: conf_serial
+// @Purpose: configure serial port
+// @Since: v1.00a
+// @Para: S_NETS_SERIAL_PROPERTY sCommProperty serial port property
+// @Return: None
+//----------------------------------------------
+bool nets_serial::conf_serial(S_NETS_SERIAL_PROPERTY sCommProperty) {
+    utils_thread_lock lock(&m_csComSync);
+    BOOL bRet = FALSE;
+    // set input and output buffer
+    bRet = SetupComm(m_hCom, NETS_SERIAL_BUFFER_SIZE, NETS_SERIAL_BUFFER_SIZE);
+    if (!bRet) {
+        return false;
+    }
+    // set DCB structure
+    DCB dcb = { 0 };
+    bRet = GetCommState(m_hCom, &dcb);
+    if (!bRet) {
+        return false;
+    }
+    // set value
+    dcb.DCBlength = sizeof(dcb);
+    dcb.BaudRate = sCommProperty.dwBaudRate;
+    dcb.ByteSize = sCommProperty.byDataBits;
+    dcb.StopBits = sCommProperty.byStopBits;
+    dcb.Parity = sCommProperty.byCheckBits;
+    bRet = SetCommState(m_hCom, &dcb);
+    if (!bRet) {
+        return false;
+    }
+    // set serial port timeout value
+    COMMTIMEOUTS ct = { 0 };
+    ct.ReadIntervalTimeout = MAXDWORD;
+    ct.ReadTotalTimeoutMultiplier = 0;
+    ct.ReadTotalTimeoutConstant = 0;
+    ct.WriteTotalTimeoutMultiplier = 500;
+    ct.WriteTotalTimeoutConstant = 5000;
+    bRet = SetCommTimeouts(m_hCom, &ct);
+    if (!bRet) {
+        return false;
+    }
+    // clear serial port buffer
+    bRet = PurgeComm(m_hCom, PURGE_TXABORT | PURGE_RXABORT | PURGE_TXCLEAR | PURGE_RXCLEAR);
+    if (!bRet) {
+        return false;
+    }
+    // create event object
+    m_ovRead.hEvent = CreateEvent(NULL, false, false, NULL);
+    m_ovWrite.hEvent = CreateEvent(NULL, false, false, NULL);
+    m_ovWait.hEvent = CreateEvent(NULL, false, false, NULL);
+    // set serial port mask
+    SetCommMask(m_hCom, EV_ERR | EV_RXCHAR);
+    return true;
 }
