@@ -33,6 +33,14 @@
 
 #define NETS_SERIAL_BUFFER_SIZE 4096
 
+typedef struct {
+    CHAR chPort[MAX_PATH];
+    DWORD dwBaudRate;
+    BYTE byDataBits;
+    BYTE byStopBits;
+    BYTE byCheckBits;
+} S_NETS_SERIAL_PROPERTY, *LPS_NETS_SERIAL_PROPERTY;
+
 class TWILIGHT_NETS_SERIAL_API nets_serial {
 private:
     HANDLE m_hCom;
@@ -56,6 +64,20 @@ public:
     nets_serial();
     ~nets_serial();
 
+    bool TWILIGHT_NETS_SERIAL_CALLMETHOD get_status() const;
+    bool TWILIGHT_NETS_SERIAL_CALLMETHOD get_recv() const;
+    void TWILIGHT_NETS_SERIAL_CALLMETHOD set_recv(bool recv);
+
+    void TWILIGHT_NETS_SERIAL_CALLMETHOD enum_serial();
+    bool TWILIGHT_NETS_SERIAL_CALLMETHOD create_serial(const char* szPort);
+    bool TWILIGHT_NETS_SERIAL_CALLMETHOD conf_serial(S_NETS_SERIAL_PROPERTY sCommProperty);
+
+    bool TWILIGHT_NETS_SERIAL_CALLMETHOD init(S_NETS_SERIAL_PROPERTY sCommProperty);
+    bool TWILIGHT_NETS_SERIAL_CALLMETHOD init_listen();
+    void TWILIGHT_NETS_SERIAL_CALLMETHOD close();
+    void TWILIGHT_NETS_SERIAL_CALLMETHOD close_listen();
+
+    static unsigned int CALLBACK on_receive_buffer(LPVOID lpParameters);
 };
 
 
