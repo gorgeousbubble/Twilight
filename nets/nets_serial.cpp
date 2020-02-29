@@ -127,7 +127,7 @@ void nets_serial::set_recv(bool recv) {
 void nets_serial::enum_serial() {
     HKEY hKey;
     LSTATUS ls;
-    ls = RegOpenKeyExW(HKEY_LOCAL_MACHINE, _T("Hardware\\DeviceMap\\SerialComm"), NULL, KEY_READ, &hKey);
+    ls = ::RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"Hardware\\DeviceMap\\SerialComm", NULL, KEY_READ, &hKey);
     if (ls == ERROR_SUCCESS) {
         TCHAR szPortName[256] = { 0 };
         TCHAR szComName[256] = { 0 };
@@ -140,7 +140,7 @@ void nets_serial::enum_serial() {
             LSTATUS ls2;
             // enum value register
             dwLong = dwSize = 256;
-            ls2 = RegEnumValueW(hKey, nCount, szPortName, &dwLong, NULL, NULL, (PUCHAR)szComName, &dwSize);
+            ls2 = ::RegEnumValueW(hKey, nCount, szPortName, &dwLong, NULL, NULL, (PUCHAR)szComName, &dwSize);
             if (ERROR_NO_MORE_ITEMS == ls2) {
                 break;
             }
@@ -256,4 +256,85 @@ bool nets_serial::init(S_NETS_SERIAL_PROPERTY sCommProperty) {
     // set open flag
     m_bOpen = true;
     return true;
+}
+
+//----------------------------------------------
+// @Function: init_listen
+// @Purpose: init serial port listen
+// @Since: v1.00a
+// @Para: None
+// @Return: None
+//----------------------------------------------
+bool nets_serial::init_listen() {
+    // check listen handle
+    if (m_hListen != INVALID_HANDLE_VALUE) {
+        return false;
+    }
+    // create thread for receive buffer
+    unsigned int uThreadID;
+    m_hListen = (HANDLE)::_beginthreadex(NULL, 0, (_beginthreadex_proc_type)on_receive_buffer, this, 0, &uThreadID);
+    if (!m_hListen) {
+        return false;
+    }
+    // set thread priority
+    BOOL bRet = FALSE;
+    bRet = ::SetThreadPriority(m_hListen, THREAD_PRIORITY_ABOVE_NORMAL);
+    if (!bRet) {
+        return false;
+    }
+    return true;
+}
+
+//----------------------------------------------
+// @Function: on_receive_buffer
+// @Purpose: handle receive serial port thread
+// @Since: v1.00a
+// @Para: LPVOID lpParameters // send parameters
+// @Return: unsigned int // thread exit code
+//----------------------------------------------
+unsigned int nets_serial::on_receive_buffer(LPVOID lpParameters) {
+    nets_serial* pBase = reinterpret_cast<nets_serial*>(lpParameters);
+    BOOL bStatus = FALSE;
+    DWORD dwWaitEvent = 0;
+    DWORD dwBytes = 0;
+    DWORD dwError = 0;
+    COMSTAT cs = { 0 };
+    BYTE chReadBuf[NETS_SERIAL_BUFFER_SIZE] = { 0 };
+
+    while (true) {
+        // check serial port open status
+        EnterCriticalSection(&pBase->m_csComSync);
+        if (!pBase->m_bOpen) {
+            LeaveCriticalSection(&pBase->m_csComSync);
+            break;
+        }
+        LeaveCriticalSection(&pBase->m_csComSync);
+
+        dwWaitEvent = 0;
+        pBase->m_ovWait.Offset = 0;
+        // wait comm event...
+        bStatus = ::WaitCommEvent(pBase->m_hCom, &dwWaitEvent, &pBase->m_ovWait);
+        if (FALSE == bStatus && GetLastError() == ERROR_IO_PENDING) {
+            bStatus = ::GetOverlappedResult(pBase->m_hCom, &pBase->m_ovWait, &dwBytes, TRUE);
+        }
+        // clear comm error
+        ClearCommError(pBase->m_hCom, &dwError, &cs);
+        // receive data from serial port
+        if (TRUE == bStatus && (dwWaitEvent & EV_RXCHAR) && cs.cbInQue > 0) {
+            dwBytes = 0;
+            pBase->m_ovRead.Offset = 0;
+            // clear receive buffer
+            memset(chReadBuf, 0, sizeof(chReadBuf));
+            bStatus = ReadFile(pBase->m_hCom, chReadBuf, sizeof(chReadBuf), &dwBytes, &pBase->m_ovRead);
+            PurgeComm(pBase->m_hCom, PURGE_RXCLEAR | PURGE_RXABORT);
+            // read data buffer
+            EnterCriticalSection(&pBase->m_csComSync);
+            pBase->m_dwRecvCount = dwBytes;
+            memset(pBase->m_chRecvBuf, 0, sizeof(pBase->m_chRecvBuf));
+            memcpy_s(pBase->m_chRecvBuf, sizeof(pBase->m_chRecvBuf), chReadBuf, sizeof(chReadBuf));
+            pBase->m_bRecv = true;
+            LeaveCriticalSection(&pBase->m_csComSync);
+        }
+    }
+    return 0;
 }
