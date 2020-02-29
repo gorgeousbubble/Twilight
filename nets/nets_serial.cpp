@@ -232,3 +232,28 @@ bool nets_serial::conf_serial(S_NETS_SERIAL_PROPERTY sCommProperty) {
     SetCommMask(m_hCom, EV_ERR | EV_RXCHAR);
     return true;
 }
+
+//----------------------------------------------
+// @Function: init
+// @Purpose: init serial port
+// @Since: v1.00a
+// @Para: S_NETS_SERIAL_PROPERTY sCommProperty serial port property
+// @Return: None
+//----------------------------------------------
+bool nets_serial::init(S_NETS_SERIAL_PROPERTY sCommProperty) {
+    utils_thread_lock lock(&m_csComSync);
+    bool bRet = false;
+    // create serial port
+    bRet = create_serial(sCommProperty.chPort);
+    if (!bRet) {
+        return false;
+    }
+    // configure serial port
+    bRet = conf_serial(sCommProperty);
+    if (!bRet) {
+        return false;
+    }
+    // set open flag
+    m_bOpen = true;
+    return true;
+}

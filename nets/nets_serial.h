@@ -72,6 +72,9 @@ public:
     bool TWILIGHT_NETS_SERIAL_CALLMETHOD create_serial(const char* szPort);
     bool TWILIGHT_NETS_SERIAL_CALLMETHOD conf_serial(S_NETS_SERIAL_PROPERTY sCommProperty);
 
+    bool TWILIGHT_NETS_SERIAL_CALLMETHOD init(S_NETS_SERIAL_PROPERTY sCommProperty);
+
+
 };
 
 
