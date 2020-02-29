@@ -338,3 +338,51 @@ unsigned int nets_serial::on_receive_buffer(LPVOID lpParameters) {
     }
     return 0;
 }
+
+//----------------------------------------------
+// @Function: close
+// @Purpose: close serial port
+// @Since: v1.00a
+// @Para: None
+// @Return: None
+//----------------------------------------------
+void nets_serial::close() {
+    // set open status
+    EnterCriticalSection(&m_csComSync);
+    m_bOpen = false;
+    LeaveCriticalSection(&m_csComSync);
+    // close handle
+    if (m_hCom != INVALID_HANDLE_VALUE) {
+        ::CloseHandle(m_hCom);
+        m_hCom = INVALID_HANDLE_VALUE;
+    }
+    // clean environment
+    if (m_ovWrite.hEvent != NULL) {
+        ::CloseHandle(m_ovWrite.hEvent);
+        m_ovWrite.hEvent = NULL;
+    }
+    if (m_ovRead.hEvent != NULL) {
+        ::CloseHandle(m_ovRead.hEvent);
+        m_ovRead.hEvent = NULL;
+    }
+    if (m_ovWait.hEvent != NULL) {
+        ::CloseHandle(m_ovWait.hEvent);
+        m_ovWait.hEvent = NULL;
+    }
+}
+
+//----------------------------------------------
+// @Function: close_listen
+// @Purpose: close serial port listen
+// @Since: v1.00a
+// @Para: None
+// @Return: None
+//----------------------------------------------
+void nets_serial::close_listen() {
+    // close listen thread...
+    if (INVALID_HANDLE_VALUE != m_hListen) {
+        ::WaitForSingleObject(m_hListen, INFINITE);
+        ::CloseHandle(m_hListen);
+        m_hListen = INVALID_HANDLE_VALUE;
+    }
+}

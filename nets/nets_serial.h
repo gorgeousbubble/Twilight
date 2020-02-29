@@ -74,6 +74,8 @@ public:
 
     bool TWILIGHT_NETS_SERIAL_CALLMETHOD init(S_NETS_SERIAL_PROPERTY sCommProperty);
     bool TWILIGHT_NETS_SERIAL_CALLMETHOD init_listen();
+    void TWILIGHT_NETS_SERIAL_CALLMETHOD close();
+    void TWILIGHT_NETS_SERIAL_CALLMETHOD close_listen();
 
     static unsigned int CALLBACK on_receive_buffer(LPVOID lpParameters);
 };
