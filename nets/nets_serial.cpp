@@ -416,3 +416,69 @@ void nets_serial::get_recv_buffer(UCHAR *pBuff, int nSize, DWORD &dwRecvCount) {
     dwRecvCount = m_dwRecvCount;
     memcpy_s(pBuff, nSize, m_chRecvBuf, sizeof(m_chRecvBuf));
 }
+
+//----------------------------------------------
+// @Function: open_port
+// @Purpose: open the serial port
+// @Since: v1.00a
+// @Para: S_NETS_SERIAL_PROPERTY sCommProperty // serial port property
+// @Return: None
+//----------------------------------------------
+bool nets_serial::open_port(S_NETS_SERIAL_PROPERTY sCommProperty) {
+    bool bRet = false;
+    // initialize serial port
+    bRet = init(sCommProperty);
+    if (!bRet) {
+        return false;
+    }
+    // initialize listen
+    bRet = init_listen();
+    if (!bRet) {
+        return false;
+    }
+    return true;
+}
+
+//----------------------------------------------
+// @Function: close_port
+// @Purpose: close the serial port
+// @Since: v1.00a
+// @Para: None
+// @Return: None
+//----------------------------------------------
+void nets_serial::close_port() {
+    close();
+    close_listen();
+}
+
+//----------------------------------------------
+// @Function: on_translate_buffer
+// @Purpose: translate send buffer thread
+// @Since: v1.00a
+// @Para: None
+// @Return: bool (true/false)
+//----------------------------------------------
+bool nets_serial::on_translate_buffer() {
+    BOOL bStatus = FALSE;
+    DWORD dwError = 0;
+    COMSTAT cs = { 0 };
+    DWORD dwBytes = 0;
+    BYTE chSendBuf[NETS_SERIAL_BUFFER_SIZE] = { 0 };
+    // clean the serial port
+    // ClearCommError(m_hCOM, &dwError, &cs);
+    PurgeComm(m_hCom, PURGE_TXCLEAR | PURGE_TXABORT);
+    m_ovWrite.Offset = 0;
+    // clean the send buffer
+    EnterCriticalSection(&m_csComSync);
+    memset(chSendBuf, 0, sizeof(chSendBuf));
+    memcpy_s(chSendBuf, sizeof(chSendBuf), m_chSendBuf, sizeof(m_chSendBuf));
+    LeaveCriticalSection(&m_csComSync);
+    // write date to serial port
+    bStatus = ::WriteFile(m_hCom, chSendBuf, m_dwSendCount, &dwBytes, &m_ovWrite);
+    if (FALSE == bStatus && GetLastError() == ERROR_IO_PENDING) {
+        if (FALSE == ::GetOverlappedResult(m_hCom, &m_ovWrite, &dwBytes, TRUE)) {
+            return false;
+        }
+    }
+    return true;
+}
