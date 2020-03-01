@@ -77,6 +77,9 @@ public:
     void TWILIGHT_NETS_SERIAL_CALLMETHOD close();
     void TWILIGHT_NETS_SERIAL_CALLMETHOD close_listen();
 
+    void TWILIGHT_NETS_SERIAL_CALLMETHOD set_send_buffer(UCHAR* pBuff, int nSize, DWORD& dwSendCount);
+    void TWILIGHT_NETS_SERIAL_CALLMETHOD get_recv_buffer(UCHAR* pBuff, int nSize, DWORD& dwRecvCount);
+
     static unsigned int CALLBACK on_receive_buffer(LPVOID lpParameters);
 };
 

@@ -386,3 +386,33 @@ void nets_serial::close_listen() {
         m_hListen = INVALID_HANDLE_VALUE;
     }
 }
+
+//----------------------------------------------
+// @Function: set_send_buffer
+// @Purpose: set send buffer for serial port
+// @Since: v1.00a
+// @Para: UCHAR *pBuff // send buffer address
+// @Para: int nSize // send buffer size
+// @Para: DWORD &dwSendCount // real send count
+// @Return: None
+//----------------------------------------------
+void nets_serial::set_send_buffer(UCHAR *pBuff, int nSize, DWORD &dwSendCount) {
+    utils_thread_lock lock(&m_csComSync);
+    m_dwSendCount = dwSendCount;
+    memcpy_s(m_chSendBuf, sizeof(m_chSendBuf), pBuff, nSize);
+}
+
+//----------------------------------------------
+// @Function: get_recv_buffer
+// @Purpose: get recv buffer for serial port
+// @Since: v1.00a
+// @Para: UCHAR *pBuff // recv buffer address
+// @Para: int nSize // recv buffer size
+// @Para: DWORD &dwRecvCount // real recv count
+// @Return: None
+//----------------------------------------------
+void nets_serial::get_recv_buffer(UCHAR *pBuff, int nSize, DWORD &dwRecvCount) {
+    utils_thread_lock lock(&m_csComSync);
+    dwRecvCount = m_dwRecvCount;
+    memcpy_s(pBuff, nSize, m_chRecvBuf, sizeof(m_chRecvBuf));
+}
