@@ -11,4 +11,4 @@ include_directories("thirdpart/dx/inc")
 
 link_directories("thirdpart/dx/lib/x86")
 
-add_executable(twilight main.cpp logs/logs_simple.cpp logs/logs_simple.h utils/utils_thread_lock.cpp utils/utils_thread_lock.h utils/utils_thread_lock_ex.cpp utils/utils_thread_lock_ex.h utils/utils_safe.h nets/nets_serial.cpp nets/nets_serial.h)
+add_executable(twilight main.cpp logs/logs_simple.cpp logs/logs_simple.h utils/utils_thread_lock.cpp utils/utils_thread_lock.h utils/utils_thread_lock_ex.cpp utils/utils_thread_lock_ex.h utils/utils_safe.h nets/nets_serial.cpp nets/nets_serial.h nets/nets_socket.cpp nets/nets_socket.h)
