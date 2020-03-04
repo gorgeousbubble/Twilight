@@ -14,6 +14,14 @@
 #ifndef TWILIGHT_NETS_SOCKET_H
 #define TWILIGHT_NETS_SOCKET_H
 
+#include <WinSock2.h>
+
+#include <iostream>
+#include <vector>
+#include <map>
+#include <process.h>
+
+#pragma comment(lib, "Ws2_32.lib")
 
 class nets_socket {
 

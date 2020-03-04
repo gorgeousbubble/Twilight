@@ -17,8 +17,8 @@
 #include <Windows.h>
 
 #include <iostream>
-#include <map>
 #include <vector>
+#include <map>
 #include <process.h>
 
 #pragma comment(lib, "WinMM.lib")
