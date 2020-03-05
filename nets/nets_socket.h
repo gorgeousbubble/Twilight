@@ -23,6 +23,14 @@
 
 #pragma comment(lib, "Ws2_32.lib")
 
+#ifdef TWILIGHT_EXPORTS
+#define TWILIGHT_NETS_SOCKET_API __declspec(dllexport)
+#else
+#define TWILIGHT_NETS_SOCKET_API __declspec(dllimport)
+#endif
+
+#define TWILIGHT_NETS_SOCKET_CALLMETHOD __stdcall
+
 class nets_socket {
 
 };
