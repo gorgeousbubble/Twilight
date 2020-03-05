@@ -31,8 +31,15 @@
 
 #define TWILIGHT_NETS_SOCKET_CALLMETHOD __stdcall
 
-class nets_socket {
+class TWILIGHT_NETS_SOCKET_API nets_socket {
+private:
+    SOCKET m_socket;
+    WSAEVENT m_SocketWriteEvent;
+    WSAEVENT m_SocketReadEvent;
 
+public:
+    static void initial();
+    static void release();
 };
 
 

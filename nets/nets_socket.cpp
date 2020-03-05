@@ -12,3 +12,35 @@
 */
 
 #include "nets_socket.h"
+
+//----------------------------------------------
+// @Function: initial
+// @Purpose: initialize socket
+// @Since: v1.00a
+// @Para: None
+// @Return: None
+//----------------------------------------------
+void nets_socket::initial() {
+    WORD wVersionRequested;
+    WSADATA wsaData;
+    int nErr;
+    // request version of socket
+    wVersionRequested = MAKEWORD(2, 2);
+    // startup WSA environment
+    nErr = ::WSAStartup(wVersionRequested, &wsaData);
+    if (nErr != 0) {
+        return;
+    }
+}
+
+//----------------------------------------------
+// @Function: release
+// @Purpose: release socket
+// @Since: v1.00a
+// @Para: None
+// @Return: None
+//----------------------------------------------
+void nets_socket::release() {
+    // cleanup WSA environment
+    ::WSACleanup();
+}
