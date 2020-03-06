@@ -37,9 +37,14 @@ private:
     WSAEVENT m_SocketWriteEvent;
     WSAEVENT m_SocketReadEvent;
 
+    int m_nLastWSAError;
+
 public:
     static void initial();
     static void release();
+
+    SOCKET create_tcp_socket();
+    SOCKET create_udp_socket();
 };
 
 
