@@ -31,6 +31,16 @@
 
 #define TWILIGHT_NETS_SOCKET_CALLMETHOD __stdcall
 
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+
+#ifndef _WINSOCK_DEPRECATED_NO_WARNINGS
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#endif
+
+#define _WINSOCKAPI_
+
 class TWILIGHT_NETS_SOCKET_API nets_socket {
 private:
     SOCKET m_socket;
