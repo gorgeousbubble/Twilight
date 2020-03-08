@@ -41,6 +41,25 @@
 
 #define _WINSOCKAPI_
 
+#define SOB_IP_LENGTH				128
+
+#define SOB_TCP_SEND_BUFFER			(32 * 1024)
+#define SOB_TCP_RECV_BUFFER			(32 * 1024)
+#define SOB_UDP_RECV_BUFFER			(32 * 1024)
+
+#define SOB_DEFAULT_TIMEOUT_SEC		5
+#define SOB_DEFAULT_MAX_CLIENT		10
+
+#define SOB_RET_OK					1
+#define SOB_RET_FAIL				0
+#define SOB_RET_TIMEOUT				-1
+#define SOB_RET_CLOSE				-2
+
+typedef struct {
+    SOCKET Socket;
+    SOCKADDR_IN SocketAddr;
+} S_NETS_SOCKET_PROPERTY, *LPS_NETS_SOCKET_PROPERTY;
+
 class TWILIGHT_NETS_SOCKET_API nets_socket {
 private:
     SOCKET m_socket;
