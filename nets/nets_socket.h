@@ -66,9 +66,18 @@ private:
     WSAEVENT m_SocketWriteEvent;
     WSAEVENT m_SocketReadEvent;
 
+    char m_pcRemoteIP[SOB_IP_LENGTH];
+    char m_pcHostIP[SOB_IP_LENGTH];
+    USHORT m_sRemotePort;
+    USHORT m_sHostPort;
+    wchar_t m_pwcRemoteIP[SOB_IP_LENGTH];
+
     int m_nLastWSAError;
 
 public:
+    nets_socket();
+    ~nets_socket();
+
     static void initial();
     static void release();
 

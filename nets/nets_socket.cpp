@@ -95,3 +95,11 @@ SOCKET nets_socket::create_udp_socket() {
     }
     return s;
 }
+
+nets_socket::nets_socket() {
+
+}
+
+nets_socket::~nets_socket() {
+
+}
