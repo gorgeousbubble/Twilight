@@ -74,6 +74,15 @@ private:
 
     int m_nLastWSAError;
 
+    std::map<int, HANDLE> m_mapAccept;
+    int m_nAcceptCount;
+    USHORT m_sMaxCount;
+
+    bool m_bIsConnected;
+
+    static char m_pcLocalIP[SOB_IP_LENGTH];
+    static USHORT m_sLocalPort;
+
 public:
     nets_socket();
     ~nets_socket();
