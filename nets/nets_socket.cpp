@@ -139,5 +139,18 @@ nets_socket::nets_socket() {
 // @Return: None
 //----------------------------------------------
 nets_socket::~nets_socket() {
-
+    // close the socket
+    if (m_socket) {
+        closesocket(m_socket);
+        m_socket = NULL;
+    }
+    // close socket event
+    if (m_SocketWriteEvent) {
+        WSACloseEvent(m_SocketWriteEvent);
+        m_SocketWriteEvent = NULL;
+    }
+    if (m_SocketReadEvent) {
+        WSACloseEvent(m_SocketReadEvent);
+        m_SocketReadEvent = NULL;
+    }
 }
