@@ -92,6 +92,11 @@ public:
 
     SOCKET create_tcp_socket();
     SOCKET create_udp_socket();
+
+    void set_recv_timeout(UINT uiMSec);
+    void set_send_timeout(UINT uiMSec);
+    void set_recv_buffer_size(UINT uiByte);
+    void set_send_buffer_size(UINT uiByte);
 };
 
 

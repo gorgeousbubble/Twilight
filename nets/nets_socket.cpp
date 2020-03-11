@@ -154,3 +154,51 @@ nets_socket::~nets_socket() {
         m_SocketReadEvent = NULL;
     }
 }
+
+//----------------------------------------------
+// @Function: set_recv_timeout
+// @Purpose: set receive timeout property
+// @Since: v1.00a
+// @Para: UINT uiMSec // timeout value
+// @Return: None
+//----------------------------------------------
+void nets_socket::set_recv_timeout(UINT uiMSec) {
+    UINT uiMseTimeOut = uiMSec;
+    ::setsockopt(m_socket, SOL_SOCKET, SO_RCVTIMEO, (char*)&uiMseTimeOut, sizeof(uiMseTimeOut));
+}
+
+//----------------------------------------------
+// @Function: set_send_timeout
+// @Purpose: set send timeout property
+// @Since: v1.00a
+// @Para: UINT uiMSec // timeout value
+// @Return: None
+//----------------------------------------------
+void nets_socket::set_send_timeout(UINT uiMSec) {
+    UINT uiMseTimeOut = uiMSec;
+    ::setsockopt(m_socket, SOL_SOCKET, SO_SNDTIMEO, (char*)&uiMseTimeOut, sizeof(uiMseTimeOut));
+}
+
+//----------------------------------------------
+// @Function: set_send_buffer_size
+// @Purpose: set send buffer size property
+// @Since: v1.00a
+// @Para: UINT uiByte // buffer size
+// @Return: None
+//----------------------------------------------
+void nets_socket::set_send_buffer_size(UINT uiByte) {
+    UINT uiBufferSize = uiByte;
+    ::setsockopt(m_socket, SOL_SOCKET, SO_SNDBUF, (char*)&uiBufferSize, sizeof(uiBufferSize));
+}
+
+//----------------------------------------------
+// @Function: set_recv_buffer_size
+// @Purpose: set receive buffer size property
+// @Since: v1.00a
+// @Para: UINT uiByte // buffer size
+// @Return: None
+//----------------------------------------------
+void nets_socket::set_recv_buffer_size(UINT uiByte) {
+    UINT uiBufferSize = uiByte;
+    ::setsockopt(m_socket, SOL_SOCKET, SO_RCVBUF, (char*)&uiBufferSize, sizeof(uiBufferSize));
+}
