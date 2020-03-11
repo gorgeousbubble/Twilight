@@ -12,6 +12,16 @@
 */
 
 #include "nets_socket.h"
+#include "../utils/utils_safe.h"
+#include "../utils/utils_thread_lock.h"
+#include <Ws2tcpip.h>
+#include <process.h>
+
+using namespace std;
+
+// global variable
+char nets_socket::m_pcLocalIP[SOB_IP_LENGTH] = { 0 };
+USHORT nets_socket::m_sLocalPort = 0;
 
 //----------------------------------------------
 // @Function: initial
@@ -104,7 +114,21 @@ SOCKET nets_socket::create_udp_socket() {
 // @Return: None
 //----------------------------------------------
 nets_socket::nets_socket() {
-
+    // initial value
+    m_socket = NULL;
+    m_SocketWriteEvent = NULL;
+    m_SocketReadEvent = NULL;
+    // clean flags
+    m_bIsConnected = false;
+    m_sMaxCount = SOB_DEFAULT_MAX_CLIENT;
+    // clean count
+    m_nAcceptCount = 0;
+    m_mapAccept.clear();
+    // clean array
+    memset(m_pcRemoteIP, 0, SOB_IP_LENGTH);
+    m_sRemotePort = 0;
+    memset(m_pcHostIP, 0, SOB_IP_LENGTH);
+    m_sHostPort = 0;
 }
 
 //----------------------------------------------
