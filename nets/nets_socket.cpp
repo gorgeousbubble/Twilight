@@ -96,10 +96,24 @@ SOCKET nets_socket::create_udp_socket() {
     return s;
 }
 
+//----------------------------------------------
+// @Function: nets_socket
+// @Purpose: construct function
+// @Since: v1.00a
+// @Para: None
+// @Return: None
+//----------------------------------------------
 nets_socket::nets_socket() {
 
 }
 
+//----------------------------------------------
+// @Function: ~nets_socket
+// @Purpose: destruct function
+// @Since: v1.00a
+// @Para: None
+// @Return: None
+//----------------------------------------------
 nets_socket::~nets_socket() {
 
 }
