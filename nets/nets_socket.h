@@ -97,6 +97,10 @@ public:
     void set_send_timeout(UINT uiMSec);
     void set_recv_buffer_size(UINT uiByte);
     void set_send_buffer_size(UINT uiByte);
+
+    SOCKET get_raw_socket();
+    bool attach_raw_socket(SOCKET s, bool bIsConnected);
+    void detach_raw_socket();
 };
 
 

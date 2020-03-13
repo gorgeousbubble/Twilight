@@ -202,3 +202,67 @@ void nets_socket::set_recv_buffer_size(UINT uiByte) {
     UINT uiBufferSize = uiByte;
     ::setsockopt(m_socket, SOL_SOCKET, SO_RCVBUF, (char*)&uiBufferSize, sizeof(uiBufferSize));
 }
+
+//----------------------------------------------
+// @Function: get_raw_socket
+// @Purpose: get raw socket
+// @Since: v1.00a
+// @Para: None
+// @Return: SOCKET // return socket
+//----------------------------------------------
+SOCKET nets_socket::get_raw_socket() {
+    return m_socket;
+}
+
+//----------------------------------------------
+// @Function: attach_raw_socket
+// @Purpose: attach raw socket
+// @Since: v1.00a
+// @Para: SOCKET s
+// @Para: bool bIsConnected
+// @Return: bool
+//----------------------------------------------
+bool nets_socket::attach_raw_socket(SOCKET s, bool bIsConnected) {
+    // set socket variable and connection status
+    m_socket = s;
+    m_bIsConnected = bIsConnected;
+    // create event
+    if (m_SocketWriteEvent == NULL) {
+        m_SocketWriteEvent = ::WSACreateEvent();
+    }
+    if (m_SocketReadEvent == NULL) {
+        m_SocketReadEvent = ::WSACreateEvent();
+    }
+    // fetch remote message
+    if (bIsConnected) {
+        struct sockaddr_in addrPeer;
+        int nLen = sizeof(addrPeer);
+        if (getpeername(s, (struct sockaddr*)&addrPeer, &nLen) == SOCKET_ERROR) {
+            return false;
+        }
+        InetNtopA(AF_INET, &addrPeer.sin_addr, m_pcRemoteIP, SOB_IP_LENGTH);
+        InetNtopW(AF_INET, &addrPeer.sin_addr, m_pwcRemoteIP, SOB_IP_LENGTH);
+        m_sRemotePort = ntohs(addrPeer.sin_port);
+    }
+    return true;
+}
+
+//----------------------------------------------
+// @Function: detach_raw_socket
+// @Purpose: detach raw socket
+// @Since: v1.00a
+// @Para: None
+// @Return: void
+//----------------------------------------------
+void nets_socket::detach_raw_socket() {
+    // close event...
+    WSAEventSelect(m_socket, m_SocketWriteEvent, 0);
+    WSAEventSelect(m_socket, m_SocketReadEvent, 0);
+    WSACloseEvent(m_SocketWriteEvent);
+    WSACloseEvent(m_SocketReadEvent);
+    // clean variable
+    m_SocketWriteEvent = NULL;
+    m_SocketReadEvent = NULL;
+    m_bIsConnected = false;
+    m_socket = NULL;
+}
