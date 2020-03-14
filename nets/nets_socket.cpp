@@ -266,3 +266,48 @@ void nets_socket::detach_raw_socket() {
     m_bIsConnected = false;
     m_socket = NULL;
 }
+
+//----------------------------------------------
+// @Function: tcp_bind_on_port
+// @Purpose: tcp bind on port
+// @Since: v1.00a
+// @Para: USHORT uPort // listen port
+// @Return: bool (true:success/false:fail)
+//----------------------------------------------
+bool nets_socket::tcp_bind_on_port(USHORT uPort) {
+    // create tcp socket
+    if (m_socket == NULL) {
+        m_socket = create_tcp_socket();
+    }
+    // start tcp server
+    SOCKADDR_IN addrLocal;
+    memset(&addrLocal, 0, sizeof(addrLocal));
+    addrLocal.sin_family = AF_INET;
+    addrLocal.sin_addr.s_addr = htonl(INADDR_ANY);
+    addrLocal.sin_port = htons(uPort);
+    m_sHostPort = uPort;
+    // bind on port
+    int nRet = bind(m_socket, (PSOCKADDR)&addrLocal, sizeof(addrLocal));
+    if (nRet == SOCKET_ERROR) {
+        m_nLastWSAError = WSAGetLastError();
+        return false;
+    }
+    return true;
+}
+
+//----------------------------------------------
+// @Function: tcp_listen
+// @Purpose: tcp listen
+// @Since: v1.00a
+// @Para: None
+// @Return: bool (true:success/false:fail)
+//----------------------------------------------
+bool nets_socket::tcp_listen() {
+    // start listen...
+    int nRet = listen(m_socket, 5);
+    if (nRet == SOCKET_ERROR) {
+        m_nLastWSAError = WSAGetLastError();
+        return false;
+    }
+    return true;
+}

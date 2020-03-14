@@ -101,6 +101,12 @@ public:
     SOCKET get_raw_socket();
     bool attach_raw_socket(SOCKET s, bool bIsConnected);
     void detach_raw_socket();
+
+    // tcp
+    bool tcp_bind_on_port(USHORT uPort);
+    bool tcp_listen();
+
+
 };
 
 
