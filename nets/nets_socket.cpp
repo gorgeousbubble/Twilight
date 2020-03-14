@@ -311,3 +311,14 @@ bool nets_socket::tcp_listen() {
     }
     return true;
 }
+
+//----------------------------------------------
+// @Function: get_remote_ip
+// @Purpose: get remote ip address
+// @Since: v1.00a
+// @Para: None
+// @Return: const char*
+//----------------------------------------------
+const char *nets_socket::get_remote_ip() const {
+    return m_pcRemoteIP;
+}

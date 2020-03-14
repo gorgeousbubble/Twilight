@@ -102,6 +102,8 @@ public:
     bool attach_raw_socket(SOCKET s, bool bIsConnected);
     void detach_raw_socket();
 
+    const char* get_remote_ip() const;
+
     // tcp
     bool tcp_bind_on_port(USHORT uPort);
     bool tcp_listen();
